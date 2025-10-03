@@ -5,26 +5,13 @@ const resourceSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  description: {
+  subtitle: {
     type: String,
     required: true
   },
-  fileUrl: {
+  content: {
     type: String,
-    required: false // Made optional for link-based resources
-  },
-  fileName: {
-    type: String,
-    required: false
-  },
-  fileSize: {
-    type: Number,
-    required: false
-  },
-  fileType: {
-    type: String,
-    required: true,
-    enum: ['pdf', 'doc', 'docx', 'jpg', 'jpeg', 'png', 'gif', 'mp4', 'avi', 'mov', 'link']
+    required: true
   },
   category: {
     type: String,

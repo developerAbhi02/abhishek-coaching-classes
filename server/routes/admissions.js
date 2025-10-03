@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { body, validationResult } = require('express-validator');
 const Admission = require('../models/Admission');
+const auth = require('../middleware/auth');
 
 // Submit admission enquiry
 router.post('/', [
@@ -33,7 +34,7 @@ router.post('/', [
 });
 
 // Get all admissions (admin only)
-router.get('/', async (req, res) => {
+router.get('/', auth, async (req, res) => {
   try {
     const admissions = await Admission.find().sort({ submittedAt: -1 });
     res.json(admissions);
@@ -44,7 +45,7 @@ router.get('/', async (req, res) => {
 });
 
 // Update admission status (admin only)
-router.put('/:id', async (req, res) => {
+router.put('/:id', auth, async (req, res) => {
   try {
     const { status } = req.body;
     const admission = await Admission.findByIdAndUpdate(

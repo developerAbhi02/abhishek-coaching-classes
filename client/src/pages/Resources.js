@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FileText, Download, Calendar, Filter } from 'lucide-react';
+import { FileText, Download, Calendar, Filter, Eye } from 'lucide-react';
 import api from '../api';
 
 const Resources = () => {
@@ -115,18 +115,14 @@ const Resources = () => {
     }
   };
 
-  const handleDownload = (resource) => {
-    if (!resource.fileUrl) return;
-    const base = process.env.REACT_APP_API_BASE || '';
-    const href = resource.fileUrl.startsWith('http') ? resource.fileUrl : `${base}${resource.fileUrl}`;
-    const link = document.createElement('a');
-    link.href = href;
-    link.target = '_blank';
-    link.rel = 'noopener noreferrer';
-    link.download = '';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+  const [viewingResource, setViewingResource] = useState(null);
+
+  const handleView = (resource) => {
+    setViewingResource(resource);
+  };
+
+  const closeResourceView = () => {
+    setViewingResource(null);
   };
 
   if (loading) {
@@ -143,6 +139,80 @@ const Resources = () => {
 
   return (
     <div>
+      {/* Resource View Modal */}
+      {viewingResource && (
+        <div className="modal-overlay" style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: 'rgba(0, 0, 0, 0.8)',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          zIndex: 1000
+        }}>
+          <div className="modal-content" style={{
+            backgroundColor: 'var(--card-bg)',
+            color: 'var(--text-color)',
+            border: '1px solid var(--border-color)',
+            boxShadow: 'var(--card-shadow)',
+            borderRadius: '8px',
+            padding: '2rem',
+            width: '90%',
+            maxWidth: '800px',
+            maxHeight: '80vh',
+            overflow: 'auto'
+          }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+              <h2 style={{ color: 'var(--primary-color)', margin: 0 }}>{viewingResource.title}</h2>
+              <button 
+                onClick={closeResourceView}
+                style={{ 
+                  background: 'none', 
+                  border: 'none', 
+                  fontSize: '1.5rem', 
+                  cursor: 'pointer',
+                  color: 'var(--text-color)'
+                }}
+              >
+                ×
+              </button>
+            </div>
+            
+            <div style={{ marginBottom: '1.5rem' }}>
+              <h4 style={{ color: 'var(--primary-color)', marginBottom: '0.5rem' }}>Description:</h4>
+              <p>{viewingResource.description}</p>
+            </div>
+            
+            <div style={{ marginBottom: '1.5rem' }}>
+              <h4 style={{ color: 'var(--primary-color)', marginBottom: '0.5rem' }}>Content:</h4>
+              <div style={{ 
+                backgroundColor: 'rgba(0, 20, 0, 0.5)', 
+                padding: '1.5rem', 
+                borderRadius: '8px',
+                border: '1px solid var(--border-color)',
+                whiteSpace: 'pre-wrap',
+                lineHeight: '1.6'
+              }}>
+                {viewingResource.content || "This resource doesn't have any text content to display."}
+              </div>
+            </div>
+            
+            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+              <button 
+                onClick={closeResourceView}
+                className="btn"
+                style={{ backgroundColor: '#666' }}
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <section className="section" style={{ background: 'linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-800) 100%)', color: 'white', paddingTop: '6rem' }}>
         <div className="container">
           <h1 style={{ fontSize: '3rem', textAlign: 'center', marginBottom: '1rem' }}>Study Resources</h1>
@@ -213,18 +283,16 @@ const Resources = () => {
                     <span>Type: {resource.fileType.toUpperCase()}</span>
                   </div>
                   
-                  {resource.fileUrl && (
-                    <div style={{ marginTop: '1.5rem' }}>
-                      <button
-                        onClick={() => handleDownload(resource)}
-                        className="btn"
-                        style={{ width: '100%', textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}
-                      >
-                        <Download size={16} />
-                        Download
-                      </button>
-                    </div>
-                  )}
+                  <div style={{ marginTop: '1.5rem' }}>
+                    <button
+                      onClick={() => handleView(resource)}
+                      className="btn"
+                      style={{ width: '100%', textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}
+                    >
+                      <Eye size={16} />
+                      View
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>

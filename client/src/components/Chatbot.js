@@ -59,11 +59,11 @@ const Chatbot = () => {
             width: '60px',
             height: '60px',
             borderRadius: '50%',
-            background: 'var(--color-primary)',
-            color: 'white',
+            background: 'var(--primary-color)',
+            color: '#000',
             border: 'none',
             cursor: 'pointer',
-            boxShadow: '0 4px 12px rgba(34,197,94,0.4)',
+            boxShadow: '0 4px 12px rgba(0, 204, 51, 0.4)',
             zIndex: 1000,
             display: 'flex',
             alignItems: 'center',
@@ -75,26 +75,67 @@ const Chatbot = () => {
       )}
 
       {isOpen && (
-        <div className="chatbot">
-          <div className="chatbot-header">
-            <h4>Chat Assistant</h4>
+        <div className="chatbot" style={{
+          position: 'fixed',
+          bottom: '90px',
+          right: '20px',
+          width: '350px',
+          height: '450px',
+          borderRadius: '12px',
+          boxShadow: '0 8px 24px rgba(0,0,0,0.2)',
+          display: 'flex',
+          flexDirection: 'column',
+          zIndex: 1000,
+          background: 'var(--card-bg)',
+          border: '1px solid var(--border-color)'
+        }}>
+          <div className="chatbot-header" style={{
+            padding: '12px 16px',
+            borderBottom: '1px solid var(--border-color)',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            background: 'var(--header-bg)',
+            borderRadius: '12px 12px 0 0'
+          }}>
+            <h4 style={{ margin: 0, color: 'var(--primary-color)' }}>Chat Assistant</h4>
             <button
               onClick={() => setIsOpen(false)}
-              style={{ background: 'none', border: 'none', color: 'white', cursor: 'pointer' }}
+              style={{ background: 'none', border: 'none', color: 'var(--text-color)', cursor: 'pointer' }}
             >
               <X size={20} />
             </button>
           </div>
           
-          <div className="chatbot-messages">
+          <div className="chatbot-messages" style={{
+            flex: 1,
+            overflowY: 'auto',
+            padding: '16px',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '12px'
+          }}>
             {messages.map((message, index) => (
-              <div key={index} className={`message ${message.sender}`}>
-                {message.text}
+              <div key={index} className={`message ${message.sender}`} style={{
+                maxWidth: '80%',
+                padding: '10px 14px',
+                borderRadius: '12px',
+                alignSelf: message.sender === 'user' ? 'flex-end' : 'flex-start',
+                background: message.sender === 'user' ? 'var(--primary-color)' : 'var(--card-bg)',
+                border: message.sender === 'bot' ? '1px solid var(--border-color)' : 'none',
+                color: message.sender === 'user' ? '#000' : 'var(--text-color)'
+              }}>
+                <div dangerouslySetInnerHTML={{ __html: message.text }} />
               </div>
             ))}
           </div>
           
-          <div className="chatbot-input">
+          <div className="chatbot-input" style={{
+            padding: '12px',
+            borderTop: '1px solid var(--border-color)',
+            background: 'var(--card-bg)',
+            borderRadius: '0 0 12px 12px'
+          }}>
             <div style={{ display: 'flex', gap: '0.5rem' }}>
               <input
                 type="text"
@@ -102,24 +143,30 @@ const Chatbot = () => {
                 onChange={(e) => setInputMessage(e.target.value)}
                 onKeyPress={handleKeyPress}
                 placeholder="Type your message..."
-                style={{ flex: 1 }}
+                style={{ 
+                  flex: 1, 
+                  padding: '10px 12px',
+                  borderRadius: '8px',
+                  border: '1px solid var(--border-color)',
+                  background: 'rgba(0,0,0,0.2)',
+                  color: 'var(--text-color)'
+                }}
               />
               <button
                 onClick={handleSendMessage}
                 style={{
-                  background: 'var(--color-primary)',
-                  color: 'white',
+                  background: 'var(--primary-color)',
                   border: 'none',
-                  borderRadius: '50%',
-                  width: '35px',
-                  height: '35px',
-                  cursor: 'pointer',
+                  borderRadius: '8px',
+                  width: '40px',
+                  height: '40px',
                   display: 'flex',
                   alignItems: 'center',
-                  justifyContent: 'center'
+                  justifyContent: 'center',
+                  cursor: 'pointer'
                 }}
               >
-                <Send size={16} />
+                <Send size={18} color="#000" />
               </button>
             </div>
           </div>

@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Course = require('../models/Course');
+const auth = require('../middleware/auth');
 
 // Get all active courses
 router.get('/', async (req, res) => {
@@ -28,7 +29,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // Create course (admin only)
-router.post('/', async (req, res) => {
+router.post('/', auth, async (req, res) => {
   try {
     const course = new Course(req.body);
     await course.save();
@@ -40,7 +41,7 @@ router.post('/', async (req, res) => {
 });
 
 // Update course (admin only)
-router.put('/:id', async (req, res) => {
+router.put('/:id', auth, async (req, res) => {
   try {
     const course = await Course.findByIdAndUpdate(
       req.params.id,
@@ -60,7 +61,7 @@ router.put('/:id', async (req, res) => {
 });
 
 // Delete course (admin only)
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', auth, async (req, res) => {
   try {
     const course = await Course.findByIdAndDelete(req.params.id);
     if (!course) {

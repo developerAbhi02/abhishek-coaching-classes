@@ -105,24 +105,24 @@ const Courses = () => {
 
       <section className="section">
         <div className="container">
-          <div className="courses-grid">
+          <div className="courses-tiles">
             {courses.map((course) => (
-              <div key={course._id} className="course-card">
-                <div style={{ display: 'flex', alignItems: 'center', marginBottom: '1rem' }}>
-                  <BookOpen size={24} style={{ color: 'var(--color-primary)', marginRight: '0.5rem' }} />
-                  <h3>{course.name}</h3>
+              <div key={course._id} className="course-tile">
+                <div className="course-tile-header">
+                  <BookOpen size={24} className="course-icon" />
+                  <h3 className="course-title">{course.name}</h3>
                 </div>
                 
-                <p style={{ color: 'var(--color-muted)', marginBottom: '1rem' }}>{course.description}</p>
+                <p className="course-description">{course.description}</p>
                 
-                <div style={{ display: 'flex', alignItems: 'center', marginBottom: '1rem' }}>
-                  <Clock size={16} style={{ color: 'var(--color-muted)', marginRight: '0.5rem' }} />
-                  <span className="course-timing">{course.timing}</span>
+                <div className="course-detail">
+                  <Clock size={16} className="detail-icon" />
+                  <span>{course.timing}</span>
                 </div>
                 
-                <div style={{ display: 'flex', alignItems: 'center', marginBottom: '1rem' }}>
-                  <Users size={16} style={{ color: 'var(--color-muted)', marginRight: '0.5rem' }} />
-                  <span style={{ color: 'var(--color-muted)' }}>Duration: {course.duration}</span>
+                <div className="course-detail">
+                  <Users size={16} className="detail-icon" />
+                  <span>Duration: {course.duration}</span>
                 </div>
                 
                 <div className="course-fee">{formatFee(course)}</div>
@@ -130,13 +130,16 @@ const Courses = () => {
                 {course.features && (
                   <ul className="course-features">
                     {course.features.map((feature, index) => (
-                      <li key={index}>{feature}</li>
+                      <li key={index}>
+                        <CheckCircle size={14} className="feature-icon" />
+                        <span>{feature}</span>
+                      </li>
                     ))}
                   </ul>
                 )}
                 
-                <div style={{ marginTop: '1.5rem' }}>
-                  <a href="/admission" className="btn" style={{ width: '100%', textAlign: 'center' }}>
+                <div className="course-action">
+                  <a href="/admission" className="btn btn-primary">
                     Apply Now
                   </a>
                 </div>

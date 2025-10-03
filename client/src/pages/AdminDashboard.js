@@ -27,11 +27,12 @@ const AdminDashboard = () => {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [showAddCourse, setShowAddCourse] = useState(false);
   const [showAddEvent, setShowAddEvent] = useState(false);
+  const [showAddResource, setShowAddResource] = useState(false);
   const [newCourse, setNewCourse] = useState({ name: '', description: '', fee: '', duration: '', timing: '' });
   const [newEvent, setNewEvent] = useState({ title: '', description: '', date: '', location: '', fee: '' });
-  const [newResource, setNewResource] = useState({ title: '', description: '', category: 'notes', file: null });
+  const [newResource, setNewResource] = useState({ title: '', subtitle: '', content: '', category: 'notes' });
   const [editingResourceId, setEditingResourceId] = useState(null);
-  const [editingResource, setEditingResource] = useState({ title: '', description: '', category: 'notes', file: null });
+  const [editingResource, setEditingResource] = useState({ title: '', subtitle: '', content: '', category: 'notes' });
   const [editingCourseId, setEditingCourseId] = useState(null);
   const [editingCourse, setEditingCourse] = useState({ name: '', description: '', fee: '', duration: '', timing: '' });
   const [editingEventId, setEditingEventId] = useState(null);
@@ -44,7 +45,19 @@ const AdminDashboard = () => {
       navigate('/admin/login');
       return;
     }
-    fetchAllData();
+    
+    // Verify token validity by making an authenticated request
+    const verifyAuth = async () => {
+      try {
+        await api.get('/api/admissions');
+        fetchAllData();
+      } catch (error) {
+        // If token is invalid, the interceptor will handle redirection
+        console.error('Authentication error:', error);
+      }
+    };
+    
+    verifyAuth();
     document.body.classList.add('has-admin-sidebar');
     return () => {
       document.body.classList.remove('has-admin-sidebar');
@@ -106,24 +119,37 @@ const AdminDashboard = () => {
     }
   };
 
-  // Create Resource (quick prompt-based)
+  // Create Resource (text-based)
   const submitResource = async (e) => {
     e.preventDefault();
     try {
-      const formData = new FormData();
-      formData.append('title', newResource.title);
-      formData.append('description', newResource.description);
-      formData.append('category', newResource.category);
-      if (newResource.file) {
-        formData.append('file', newResource.file);
+      const resourceData = {
+        title: newResource.title,
+        subtitle: newResource.subtitle,
+        category: newResource.category,
+        content: newResource.content
+      };
+
+      const response = await fetch('/api/resources', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(resourceData)
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to create resource');
       }
-      const res = await api.post('/api/resources', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
-      setResources([res.data, ...resources]);
-      setNewResource({ title: '', description: '', category: 'notes', file: null });
-      toast.success('Resource uploaded');
-    } catch (e) {
-      console.error(e);
-      toast.error('Failed to upload resource');
+
+      const data = await response.json();
+      setResources([data, ...resources]);
+      setNewResource({ title: '', subtitle: '', content: '', category: 'notes' });
+      setShowAddResource(false);
+      toast.success('Resource created successfully');
+    } catch (error) {
+      console.error('Error creating resource:', error);
+      toast.error('Failed to create resource');
     }
   };
 
@@ -142,28 +168,40 @@ const AdminDashboard = () => {
     setEditingResourceId(resource._id);
     setEditingResource({
       title: resource.title || '',
-      description: resource.description || '',
-      category: resource.category || 'notes',
-      file: null
+      subtitle: resource.subtitle || '',
+      content: resource.content || '',
+      category: resource.category || 'notes'
     });
   };
 
   const saveResourceEdit = async (e) => {
     e.preventDefault();
     try {
-      const formData = new FormData();
-      formData.append('title', editingResource.title);
-      formData.append('description', editingResource.description);
-      formData.append('category', editingResource.category);
-      if (editingResource.file) {
-        formData.append('file', editingResource.file);
+      const resourceData = {
+        title: editingResource.title,
+        subtitle: editingResource.subtitle,
+        content: editingResource.content,
+        category: editingResource.category
+      };
+
+      const response = await fetch(`/api/resources/${editingResourceId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(resourceData)
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update resource');
       }
-      const res = await api.put(`/api/resources/${editingResourceId}`, formData, { headers: { 'Content-Type': 'multipart/form-data' } });
-      setResources(resources.map(r => r._id === editingResourceId ? res.data : r));
+
+      const updatedResource = await response.json();
+      setResources(resources.map(r => r._id === editingResourceId ? updatedResource : r));
       setEditingResourceId(null);
-      toast.success('Resource updated');
-    } catch (e) {
-      console.error(e);
+      toast.success('Resource updated successfully');
+    } catch (error) {
+      console.error('Error updating resource:', error);
       toast.error('Failed to update resource');
     }
   };
@@ -295,63 +333,67 @@ const AdminDashboard = () => {
   return (
     <div className="admin-container">
       <div className={`admin-sidebar${isSidebarCollapsed ? ' collapsed' : ''}`}>
-        <h2>Admin Dashboard</h2>
-        <button 
-          aria-label={isSidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-          className="sidebar-toggle"
-          onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
-        >
-          {isSidebarCollapsed ? <ChevronRight size={18} /> : <ChevronLeft size={18} />}
-        </button>
+        <div className="admin-sidebar-header">
+          <div className="admin-logo">
+            <BarChart3 size={24} />
+            <span>ACC Admin</span>
+          </div>
+          <button 
+            onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
+            className="admin-sidebar-toggle"
+          >
+            {isSidebarCollapsed ? <ChevronRight size={20} /> : <ChevronLeft size={20} />}
+          </button>
+        </div>
         <ul className="admin-nav">
-          <li>
+          <li className="admin-nav-item">
             <a 
-              href="#overview" 
-              className={activeTab === 'overview' ? 'active' : ''}
-              onClick={() => setActiveTab('overview')}
+              href="#" 
+              onClick={(e) => { e.preventDefault(); setActiveTab('overview'); }}
+              className={`admin-nav-link${activeTab === 'overview' ? ' active' : ''}`}
             >
-              <BarChart3 size={16} style={{ marginRight: '0.5rem' }} />
-              Overview
+              <BarChart3 size={18} />
+              <span>Overview</span>
             </a>
           </li>
-          <li>
+          <li className="admin-nav-item">
             <a 
-              href="#admissions" 
-              className={activeTab === 'admissions' ? 'active' : ''}
-              onClick={() => setActiveTab('admissions')}
+              href="#" 
+              onClick={(e) => { e.preventDefault(); setActiveTab('admissions'); }}
+              className={`admin-nav-link${activeTab === 'admissions' ? ' active' : ''}`}
             >
-              <Users size={16} style={{ marginRight: '0.5rem' }} />
-              Admissions ({admissions.length})
+              <Users size={18} />
+              <span>Admissions ({admissions.length})</span>
             </a>
           </li>
-          <li>
+          <li className="admin-nav-item">
             <a 
-              href="#courses" 
-              className={activeTab === 'courses' ? 'active' : ''}
-              onClick={() => setActiveTab('courses')}
+              href="#" 
+              onClick={(e) => { e.preventDefault(); setActiveTab('courses'); }}
+              className={`admin-nav-link${activeTab === 'courses' ? ' active' : ''}`}
             >
-              <BookOpen size={16} style={{ marginRight: '0.5rem' }} />
-              Courses ({courses.length})
+              <BookOpen size={18} />
+              <span>Courses ({courses.length})</span>
             </a>
           </li>
-          <li>
+          <li className="admin-nav-item">
             <a 
-              href="#events" 
-              className={activeTab === 'events' ? 'active' : ''}
-              onClick={() => setActiveTab('events')}
+              href="#" 
+              onClick={(e) => { e.preventDefault(); setActiveTab('events'); }}
+              className={`admin-nav-link${activeTab === 'events' ? ' active' : ''}`}
             >
-              <Calendar size={16} style={{ marginRight: '0.5rem' }} />
-              Events ({events.length})
+              <Calendar size={18} />
+              <span>Events ({events.length})</span>
             </a>
           </li>
-          <li>
+          <li className="admin-nav-item">
             <a 
-              href="#resources" 
-              className={activeTab === 'resources' ? 'active' : ''}
-              onClick={() => setActiveTab('resources')}
+              href="#" 
+              onClick={(e) => { e.preventDefault(); setActiveTab('resources'); }}
+              className={`admin-nav-link${activeTab === 'resources' ? ' active' : ''}`}
             >
-              <FileText size={16} style={{ marginRight: '0.5rem' }} />
-              Resources ({resources.length})
+              <FileText size={18} />
+              <span>Resources ({resources.length})</span>
             </a>
           </li>
           <li>
@@ -365,16 +407,16 @@ const AdminDashboard = () => {
 
       <div className={`admin-main${isSidebarCollapsed ? ' collapsed' : ''}`}>
         <div className="admin-header">
-          <h1 style={{ margin: 0, color: 'var(--color-text)' }}>
+          <h1 className="admin-title">
             {activeTab.charAt(0).toUpperCase() + activeTab.slice(1)} Management
           </h1>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            <span style={{ color: 'var(--color-muted)' }}>
+          <div className="admin-user-section">
+            <span className="admin-username">
               Welcome, {JSON.parse(localStorage.getItem('adminUser') || '{}').username}
             </span>
-            <button onClick={handleLogout} className="btn btn-secondary">
-              <LogOut size={16} style={{ marginRight: '0.5rem' }} />
-              Logout
+            <button onClick={handleLogout} className="admin-btn admin-btn-danger">
+              <LogOut size={16} />
+              <span>Logout</span>
             </button>
           </div>
         </div>
@@ -382,30 +424,32 @@ const AdminDashboard = () => {
         {/* Overview Tab */}
         {activeTab === 'overview' && (
           <div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '2rem', marginBottom: '2rem' }}>
-              <div style={{ background: 'var(--color-card)', padding: '2rem', borderRadius: '10px', boxShadow: 'var(--shadow-soft)', border: '1px solid var(--color-border)' }}>
-                <div style={{ display: 'flex', alignItems: 'center', marginBottom: '1rem' }}>
-                  <Users size={24} style={{ color: 'var(--color-primary)', marginRight: '0.5rem' }} />
-                  <h3 style={{ margin: 0, color: 'var(--color-text)' }}>Total Admissions</h3>
+            <div className="admin-grid">
+              {/* Total Admissions Card */}
+              <div className="admin-card admin-stat-card">
+                <div className="admin-card-header">
+                  <h3 className="admin-card-title">Total Admissions</h3>
+                  <div className="admin-card-icon">
+                    <Users size={20} />
+                  </div>
                 </div>
-                <div style={{ fontSize: '2rem', fontWeight: 'bold', color: 'var(--color-primary)' }}>
-                  {admissions.length}
-                </div>
-                <p style={{ color: 'var(--color-muted)', margin: '0.5rem 0 0' }}>
-                  {admissions.filter(a => a.status === 'pending').length} pending
+                <p className="admin-stat-value">{admissions.length}</p>
+                <p className="admin-stat-detail">
+                  {admissions.filter(a => a.status === 'pending').length} pending applications
                 </p>
               </div>
 
-              <div style={{ background: 'var(--color-card)', padding: '2rem', borderRadius: '10px', boxShadow: 'var(--shadow-soft)', border: '1px solid var(--color-border)' }}>
-                <div style={{ display: 'flex', alignItems: 'center', marginBottom: '1rem' }}>
-                  <BookOpen size={24} style={{ color: '#28a745', marginRight: '0.5rem' }} />
-                  <h3 style={{ margin: 0, color: 'var(--color-text)' }}>Active Courses</h3>
+              {/* Active Courses Card */}
+              <div className="admin-card admin-stat-card">
+                <div className="admin-card-header">
+                  <h3 className="admin-card-title">Active Courses</h3>
+                  <div className="admin-card-icon">
+                    <BookOpen size={20} />
+                  </div>
                 </div>
-                <div style={{ fontSize: '2rem', fontWeight: 'bold', color: 'var(--color-primary)' }}>
-                  {courses.length}
-                </div>
-                <p style={{ color: 'var(--color-muted)', margin: '0.5rem 0 0' }}>
-                  All courses active
+                <p className="admin-stat-value">{courses.length}</p>
+                <p className="admin-stat-detail">
+                  {courses.reduce((total, course) => total + (course.enrollments || 0), 0)} total enrollments
                 </p>
               </div>
 
@@ -689,51 +733,71 @@ const AdminDashboard = () => {
             <div style={{ background: 'var(--color-card)', padding: '2rem', borderRadius: '10px', boxShadow: 'var(--shadow-soft)', border: '1px solid var(--color-border)' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
                 <h3 style={{ margin: 0, color: 'var(--color-text)' }}>Resource Management</h3>
-                <form onSubmit={submitResource} style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', alignItems: 'center' }}>
-                  <input required placeholder="Title" value={newResource.title} onChange={(e) => setNewResource({ ...newResource, title: e.target.value })} />
-                  <input placeholder="Description" value={newResource.description} onChange={(e) => setNewResource({ ...newResource, description: e.target.value })} />
-                  <select value={newResource.category} onChange={(e) => setNewResource({ ...newResource, category: e.target.value })}>
-                    <option value="notes">Notes</option>
-                    <option value="sample-papers">Sample Papers</option>
-                    <option value="syllabus">Syllabus</option>
-                    <option value="announcements">Announcements</option>
-                  </select>
-                  <input type="file" onChange={(e) => setNewResource({ ...newResource, file: e.target.files && e.target.files[0] })} />
-                  <button type="submit" className="btn">
-                    <Plus size={16} style={{ marginRight: '0.5rem' }} />
-                    Upload
-                  </button>
-                </form>
+                <button className="btn" onClick={() => setShowAddResource(true)}>
+                  <Plus size={16} style={{ marginRight: '0.5rem' }} />
+                  Add Resource
+                </button>
               </div>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1rem' }}>
-                {resources.map((resource) => (
-                  <div key={resource._id} style={{ border: '1px solid #dee2e6', borderRadius: '8px', padding: '1rem' }}>
-                    {editingResourceId === resource._id ? (
-                      <form onSubmit={saveResourceEdit} style={{ display: 'grid', gap: '0.5rem' }}>
+              {showAddResource && (
+                <form onSubmit={submitResource} style={{ display: 'grid', gap: '1rem', marginBottom: '1rem', width: '100%' }}>
+                  <div style={{ display: 'grid', gap: '0.75rem', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))' }}>
+                    <input required placeholder="Title" value={newResource.title} onChange={(e) => setNewResource({ ...newResource, title: e.target.value })} />
+                    <input required placeholder="Subtitle" value={newResource.subtitle} onChange={(e) => setNewResource({ ...newResource, subtitle: e.target.value })} />
+                    <select value={newResource.category} onChange={(e) => setNewResource({ ...newResource, category: e.target.value })}>
+                      <option value="notes">Notes</option>
+                      <option value="sample-papers">Sample Papers</option>
+                      <option value="syllabus">Syllabus</option>
+                      <option value="announcements">Announcements</option>
+                    </select>
+                  </div>
+                  <textarea 
+                    required 
+                    placeholder="Content" 
+                    value={newResource.content} 
+                    onChange={(e) => setNewResource({ ...newResource, content: e.target.value })}
+                    style={{ minHeight: '150px', padding: '0.5rem', borderRadius: '4px', border: '1px solid #dee2e6' }}
+                  />
+                  <div>
+                    <button type="submit" className="btn">
+                      <Plus size={16} style={{ marginRight: '0.5rem' }} />
+                      Create Resource
+                    </button>
+                    <button className="btn btn-secondary" type="button" onClick={() => setShowAddResource(false)} style={{ marginLeft: '0.5rem' }}>Cancel</button>
+                  </div>
+                </form>
+              )}
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1rem', marginTop: '1rem' }}>
+              {resources.map((resource) => (
+                <div key={resource._id} style={{ border: '1px solid #dee2e6', borderRadius: '8px', padding: '1rem' }}>
+                  {editingResourceId === resource._id ? (
+                      <form onSubmit={saveResourceEdit} style={{ display: 'grid', gap: '1rem' }}>
                         <input required placeholder="Title" value={editingResource.title} onChange={(e) => setEditingResource({ ...editingResource, title: e.target.value })} />
-                        <input placeholder="Description" value={editingResource.description} onChange={(e) => setEditingResource({ ...editingResource, description: e.target.value })} />
+                        <input required placeholder="Subtitle" value={editingResource.subtitle} onChange={(e) => setEditingResource({ ...editingResource, subtitle: e.target.value })} />
                         <select value={editingResource.category} onChange={(e) => setEditingResource({ ...editingResource, category: e.target.value })}>
                           <option value="notes">Notes</option>
                           <option value="sample-papers">Sample Papers</option>
                           <option value="syllabus">Syllabus</option>
                           <option value="announcements">Announcements</option>
                         </select>
-                        <input type="file" onChange={(e) => setEditingResource({ ...editingResource, file: e.target.files && e.target.files[0] })} />
+                        <textarea 
+                          required 
+                          placeholder="Content" 
+                          value={editingResource.content} 
+                          onChange={(e) => setEditingResource({ ...editingResource, content: e.target.value })}
+                          style={{ minHeight: '150px', padding: '0.5rem', borderRadius: '4px', border: '1px solid #dee2e6' }}
+                        />
                         <div style={{ display: 'flex', gap: '0.5rem' }}>
                           <button className="btn" type="submit">Save</button>
                           <button className="btn btn-secondary" type="button" onClick={cancelResourceEdit}>Cancel</button>
                         </div>
                       </form>
                     ) : (
-                      <>
+                      <div>
                         <h4 style={{ color: 'var(--color-primary)', marginBottom: '0.5rem' }}>{resource.title}</h4>
-                        <p style={{ color: '#666', marginBottom: '0.5rem' }}>{resource.description}</p>
-                        <p style={{ color: '#666', fontSize: '0.9rem' }}>Type: {resource.fileType.toUpperCase()}</p>
+                        <p style={{ color: '#666', marginBottom: '0.5rem' }}>{resource.subtitle}</p>
                         <p style={{ color: '#666', fontSize: '0.9rem' }}>Category: {resource.category}</p>
-                        <p style={{ color: '#666', fontSize: '0.9rem' }}>Uploaded: {formatDate(resource.createdAt)}</p>
-                        {resource.fileUrl && (
-                          <a className="btn btn-secondary" href={resource.fileUrl} target="_blank" rel="noreferrer" style={{ marginTop: '0.5rem' }}>View</a>
-                        )}
+                        <p style={{ color: '#666', fontSize: '0.9rem' }}>Created: {formatDate(resource.createdAt)}</p>
                         <div style={{ marginTop: '1rem', display: 'flex', gap: '0.5rem' }}>
                           <button className="btn btn-secondary" onClick={() => startEditResource(resource)} style={{ padding: '0.5rem 1rem', fontSize: '0.9rem' }}>
                             <Edit size={14} style={{ marginRight: '0.25rem' }} />
@@ -744,11 +808,10 @@ const AdminDashboard = () => {
                             Delete
                           </button>
                         </div>
-                      </>
+                      </div>
                     )}
-                  </div>
-                ))}
-              </div>
+                </div>
+              ))}
             </div>
           </div>
         )}

@@ -25,54 +25,212 @@ const Admission = () => {
 
   return (
     <div>
-      <section className="section" style={{ background: 'linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-800) 100%)', color: 'white', paddingTop: '6rem' }}>
+      <section className="section admission-hero">
         <div className="container">
-          <h1 style={{ fontSize: '3rem', textAlign: 'center', marginBottom: '1rem' }}>Admission Enquiry</h1>
-          <p style={{ fontSize: '1.2rem', textAlign: 'center', maxWidth: '600px', margin: '0 auto' }}>
+          <h1 className="section-title">Admission Enquiry</h1>
+          <p className="section-description">
             Fill out the form below to express your interest in joining our coaching classes. We will contact you within 24-48 hours.
           </p>
-          <div style={{ marginTop: '1.25rem', display: 'flex', justifyContent: 'center' }}>
+          <div className="download-btn-container">
+            <a
+              href="https://forms.zohopublic.com/abhishekcoachingclasses/form/AdmissionEnquiry/formperma/sample_form_link"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn btn-primary"
+            >
+              <CheckCircle size={18} />
+              Fill out this form to get contacted within 24 to 48 hours
+            </a>
             <a
               href={admissionFormPdf}
               download
-              className="btn"
-              style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', background: 'white', color: 'var(--color-primary)' }}
+              className="btn btn-light"
             >
               <Download size={18} />
-              Download Admission Form (PDF)
+              Download Admission Form (PDF) - For already contacted students
             </a>
+          </div>
+        </div>
+      </section>
+      
+      {/* Student Enquiry Form */}
+      <section className="section enquiry-form-section">
+        <div className="container">
+          <h2 className="section-title">Quick Enquiry Form</h2>
+          <p className="section-description">
+            Fill out this quick form to get information about our courses. We'll contact you shortly.
+          </p>
+          <form className="enquiry-form" onSubmit={handleSubmit(onSubmit)}>
+            <div className="form-grid">
+              <div className="form-group">
+                <label htmlFor="name">Full Name</label>
+                <div className="input-with-icon">
+                  <User size={18} />
+                  <input
+                    type="text"
+                    id="name"
+                    placeholder="Your full name"
+                    {...register("name", { required: "Name is required" })}
+                  />
+                </div>
+                {errors.name && <span className="error-message">{errors.name.message}</span>}
+              </div>
+              
+              <div className="form-group">
+                <label htmlFor="phone">Phone Number</label>
+                <div className="input-with-icon">
+                  <Phone size={18} />
+                  <input
+                    type="tel"
+                    id="phone"
+                    placeholder="Your phone number"
+                    {...register("phone", { 
+                      required: "Phone number is required",
+                      pattern: {
+                        value: /^[0-9]{10}$/,
+                        message: "Please enter a valid 10-digit phone number"
+                      }
+                    })}
+                  />
+                </div>
+                {errors.phone && <span className="error-message">{errors.phone.message}</span>}
+              </div>
+              
+              <div className="form-group">
+                <label htmlFor="email">Email Address</label>
+                <div className="input-with-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+                  <input
+                    type="email"
+                    id="email"
+                    placeholder="Your email address"
+                    {...register("email", {
+                      required: "Email is required",
+                      pattern: {
+                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                        message: "Please enter a valid email address"
+                      }
+                    })}
+                  />
+                </div>
+                {errors.email && <span className="error-message">{errors.email.message}</span>}
+              </div>
+              
+              <div className="form-group">
+                <label htmlFor="course">Course of Interest</label>
+                <div className="input-with-icon">
+                  <BookOpen size={18} />
+                  <select
+                    id="course"
+                    {...register("course", { required: "Please select a course" })}
+                  >
+                    <option value="">Select a course</option>
+                    <option value="Lakshya 90">Lakshya 90 (CBSE Class 10)</option>
+                    <option value="Sankalp">Sankalp (Classes 3-5)</option>
+                    <option value="MIT30">MIT30 (Spoken English)</option>
+                    <option value="MIB 1.0">MIB 1.0 (Biology NCERT)</option>
+                  </select>
+                </div>
+                {errors.course && <span className="error-message">{errors.course.message}</span>}
+              </div>
+              
+              <div className="form-group full-width">
+                <label htmlFor="message">Message (Optional)</label>
+                <textarea
+                  id="message"
+                  placeholder="Any specific questions or requirements?"
+                  rows="3"
+                  {...register("message")}
+                ></textarea>
+              </div>
+            </div>
+            
+            <button type="submit" className="btn btn-primary" disabled={isSubmitting}>
+              {isSubmitting ? 'Submitting...' : 'Submit Enquiry'}
+            </button>
+          </form>
+        </div>
+      </section>
+      
+      {/* Courses Section in Tiled Format */}
+      <section className="section courses-section">
+        <div className="container">
+          <h2 className="section-title">Available Courses</h2>
+          <div className="courses-tiles">
+            <div className="course-tile">
+              <div className="course-tile-header">
+                <h3>Lakshya 90</h3>
+                <span className="course-badge">CBSE Class 10</span>
+              </div>
+              <div className="course-tile-content">
+                <p>Comprehensive preparation for CBSE Class 10 board exams with focus on scoring 90+ marks.</p>
+              </div>
+            </div>
+            
+            <div className="course-tile">
+              <div className="course-tile-header">
+                <h3>Sankalp</h3>
+                <span className="course-badge">Classes 3-5</span>
+              </div>
+              <div className="course-tile-content">
+                <p>Foundation course for primary school students with focus on building strong basics.</p>
+              </div>
+            </div>
+            
+            <div className="course-tile">
+              <div className="course-tile-header">
+                <h3>MIT30</h3>
+                <span className="course-badge">Spoken English</span>
+              </div>
+              <div className="course-tile-content">
+                <p>Enhance your English speaking skills with our specialized 30-day intensive program.</p>
+              </div>
+            </div>
+            
+            <div className="course-tile">
+              <div className="course-tile-header">
+                <h3>MIB 1.0</h3>
+                <span className="course-badge">Biology NCERT</span>
+              </div>
+              <div className="course-tile-content">
+                <p>Specialized Biology course focusing on NCERT curriculum with practical applications.</p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
       <section className="section">
         <div className="container">
-          <div className="form-container">
+          <div className="form-card">
+            <h2 className="form-title">Student Information</h2>
             <form onSubmit={handleSubmit(onSubmit)}>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1rem' }}>
+              <div className="form-grid">
                 <div className="form-group">
                   <label htmlFor="studentName">
-                    <User size={16} style={{ marginRight: '0.5rem' }} />
+                    <User size={16} className="form-icon" />
                     Student Name *
                   </label>
                   <input
                     type="text"
                     id="studentName"
+                    className="form-input"
                     {...register('studentName', { required: 'Student name is required' })}
                     placeholder="Enter student's full name"
                   />
                   {errors.studentName && (
-                    <span style={{ color: 'red', fontSize: '0.9rem' }}>{errors.studentName.message}</span>
+                    <span className="form-error">{errors.studentName.message}</span>
                   )}
                 </div>
 
                 <div className="form-group">
                   <label htmlFor="studentClass">
-                    <BookOpen size={16} style={{ marginRight: '0.5rem' }} />
+                    <BookOpen size={16} className="form-icon" />
                     Class *
                   </label>
                   <select
                     id="studentClass"
+                    className="form-select class-select"
                     {...register('studentClass', { required: 'Class is required' })}
                   >
                     <option value="">Select Class</option>
@@ -84,21 +242,20 @@ const Admission = () => {
                     <option value="Class 8">Class 8</option>
                     <option value="Class 9">Class 9</option>
                     <option value="Class 10">Class 10</option>
-                    <option value="Class 11">Class 11</option>
-                    <option value="Class 12">Class 12</option>
                   </select>
                   {errors.studentClass && (
-                    <span style={{ color: 'red', fontSize: '0.9rem' }}>{errors.studentClass.message}</span>
+                    <span className="form-error">{errors.studentClass.message}</span>
                   )}
                 </div>
 
                 <div className="form-group">
                   <label htmlFor="batchSelection">
-                    <BookOpen size={16} style={{ marginRight: '0.5rem' }} />
+                    <BookOpen size={16} className="form-icon" />
                     Batch Selection *
                   </label>
                   <select
                     id="batchSelection"
+                    className="form-select batch-select"
                     {...register('batchSelection', { required: 'Batch selection is required' })}
                   >
                     <option value="">Select Batch</option>
@@ -110,34 +267,36 @@ const Admission = () => {
                     <option value="MIB 1.0">MIB 1.0 (Biology NCERT)</option>
                   </select>
                   {errors.batchSelection && (
-                    <span style={{ color: 'red', fontSize: '0.9rem' }}>{errors.batchSelection.message}</span>
+                    <span className="form-error">{errors.batchSelection.message}</span>
                   )}
                 </div>
 
                 <div className="form-group">
                   <label htmlFor="parentName">
-                    <User size={16} style={{ marginRight: '0.5rem' }} />
+                    <User size={16} className="form-icon" />
                     Parent/Guardian Name *
                   </label>
                   <input
                     type="text"
                     id="parentName"
+                    className="form-input"
                     {...register('parentName', { required: 'Parent name is required' })}
                     placeholder="Enter parent/guardian name"
                   />
                   {errors.parentName && (
-                    <span style={{ color: 'red', fontSize: '0.9rem' }}>{errors.parentName.message}</span>
+                    <span className="form-error">{errors.parentName.message}</span>
                   )}
                 </div>
 
                 <div className="form-group">
                   <label htmlFor="contact">
-                    <Phone size={16} style={{ marginRight: '0.5rem' }} />
+                    <Phone size={16} className="form-icon" />
                     Contact Number *
                   </label>
                   <input
                     type="tel"
                     id="contact"
+                    className="form-input"
                     {...register('contact', { 
                       required: 'Contact number is required',
                       pattern: {
@@ -148,63 +307,65 @@ const Admission = () => {
                     placeholder="Enter 10-digit mobile number"
                   />
                   {errors.contact && (
-                    <span style={{ color: 'red', fontSize: '0.9rem' }}>{errors.contact.message}</span>
+                    <span className="form-error">{errors.contact.message}</span>
                   )}
                 </div>
 
-                <div className="form-group" style={{ gridColumn: '1 / -1' }}>
+                <div className="form-group form-group-full">
                   <label htmlFor="address">
-                    <MapPin size={16} style={{ marginRight: '0.5rem' }} />
+                    <MapPin size={16} className="form-icon" />
                     Complete Address *
                   </label>
                   <textarea
                     id="address"
                     rows="3"
+                    className="form-textarea"
                     {...register('address', { required: 'Address is required' })}
                     placeholder="Enter complete address with pincode"
                   />
                   {errors.address && (
-                    <span style={{ color: 'red', fontSize: '0.9rem' }}>{errors.address.message}</span>
+                    <span className="form-error">{errors.address.message}</span>
                   )}
                 </div>
               </div>
 
-              <div className="checkbox-group">
-                <input
-                  type="checkbox"
-                  id="mockTestParticipation"
-                  {...register('mockTestParticipation')}
-                />
-                <label htmlFor="mockTestParticipation">
-                  I would like to participate in monthly mock tests (₹300/month)
-                </label>
+              <div className="checkbox-container">
+                <div className="checkbox-group">
+                  <input
+                    type="checkbox"
+                    id="mockTestParticipation"
+                    className="form-checkbox"
+                    {...register('mockTestParticipation')}
+                  />
+                  <label htmlFor="mockTestParticipation">
+                    I would like to participate in monthly mock tests (₹300/month)
+                  </label>
+                </div>
+
+                <div className="checkbox-group">
+                  <input
+                    type="checkbox"
+                    id="consentGiven"
+                    className="form-checkbox"
+                    {...register('consentGiven', { required: 'Consent is required' })}
+                  />
+                  <label htmlFor="consentGiven">
+                    I agree to the terms and conditions and give consent for processing this enquiry *
+                  </label>
+                  {errors.consentGiven && (
+                    <span className="form-error">{errors.consentGiven.message}</span>
+                  )}
+                </div>
               </div>
 
-              <div className="checkbox-group">
-                <input
-                  type="checkbox"
-                  id="consentGiven"
-                  {...register('consentGiven', { required: 'Consent is required' })}
-                />
-                <label htmlFor="consentGiven">
-                  I agree to the terms and conditions and give consent for processing this enquiry *
-                </label>
-                {errors.consentGiven && (
-                  <span style={{ color: 'red', fontSize: '0.9rem', display: 'block', marginTop: '0.5rem' }}>
-                    {errors.consentGiven.message}
-                  </span>
-                )}
-              </div>
-
-              <div style={{ textAlign: 'center', marginTop: '2rem' }}>
+              <div className="form-submit">
                 <button
-                  type="submit"
-                  className="btn"
-                  disabled={isSubmitting}
-                  style={{ fontSize: '1.1rem', padding: '15px 40px' }}
-                >
-                  {isSubmitting ? 'Submitting...' : 'Submit Enquiry'}
-                </button>
+                type="submit"
+                disabled={isSubmitting}
+                className="btn-primary"
+              >
+                {isSubmitting ? 'Submitting...' : 'Submit Enquiry'}
+              </button>
               </div>
             </form>
           </div>

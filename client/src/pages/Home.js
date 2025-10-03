@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { BookOpen, Users, Calendar, FileText, Award } from 'lucide-react';
+import { BookOpen, Users, Calendar, FileText, Award, Terminal, Code, Shield, Zap } from 'lucide-react';
 import Typed from 'typed.js';
 
 const Home = () => {
@@ -11,21 +11,28 @@ const Home = () => {
   useEffect(() => {
     // Start subtitle typing effect with repeat
     const subtitleTyped = new Typed(subtitleRef.current, {
-      strings: ['Empowering students with quality education and personalized guidance to achieve their academic dreams'],
+      strings: [
+        'Empowering students with quality education',
+        'Hack your way to academic success',
+        'Decode your potential with our expert guidance',
+        'Programming your future for excellence'
+      ],
       typeSpeed: 50,
       backSpeed: 30,
       backDelay: 2000,
       startDelay: 1000,
       showCursor: true,
-      cursorChar: '|',
+      cursorChar: '_',
       loop: true,
       loopCount: Infinity
     });
 
-    // Show buttons immediately (no typing effect on buttons)
+    // Show buttons with animation
     setTimeout(() => {
-      buttonsRef.current.style.opacity = '1';
-      buttonsRef.current.style.transform = 'translateY(0)';
+      if (buttonsRef.current) {
+        buttonsRef.current.style.opacity = '1';
+        buttonsRef.current.style.transform = 'translateY(0)';
+      }
     }, 500);
 
     return () => {
@@ -34,181 +41,217 @@ const Home = () => {
   }, []);
 
   return (
-    <div>
-      {/* Hero Section */}
+    <div className="home-container">
+        {/* Access Granted Section - Repositioned */}
+        <section className="access-granted-section text-center" style={{ marginTop: '20px', marginBottom: '30px' }}>
+          <div className="container">
+            <div className="access-content">
+              <h2>Access Granted to Quality Education</h2>
+              <p>Join our coaching classes and get access to expert faculty, comprehensive study materials, and a supportive learning environment.</p>
+            </div>
+          </div>
+        </section>
+        
+        {/* Hero Section */}
       <section className="hero">
-        <div className="container">
-          <h1 className="hero-title" style={{ minHeight: '60px' }}>
-            <span className="welcome-line">Welcome to</span>
-            <span className="brand-title brand-title-strong">Abhishek Coaching Classes</span>
-          </h1>
-          <p style={{ minHeight: '60px', marginBottom: '2rem' }}>
-            <span ref={subtitleRef}></span>
-          </p>
-          <div 
-            ref={buttonsRef}
-            style={{ 
-              display: 'flex', 
-              gap: '1rem', 
-              justifyContent: 'center', 
-              flexWrap: 'wrap',
-              opacity: 0,
-              transform: 'translateY(20px)',
-              transition: 'all 0.8s ease',
-              position: 'relative',
-              zIndex: 10
-            }}
-          >
-            <Link to="/admission" className="btn" style={{ cursor: 'pointer', textDecoration: 'none' }}>Apply Now</Link>
-            <Link to="/courses" className="btn btn-secondary" style={{ cursor: 'pointer', textDecoration: 'none' }}>View Courses</Link>
+        <div className="matrix-bg"></div>
+        <div className="scanline"></div>
+        <div className="glitch-effect"></div>
+        
+        <div className="container hero-content glass-panel text-center">
+          <div className="glitch-wrapper">
+            <h1 className="hero-title glitch-text">
+              <span className="welcome-line">Access Granted:</span>
+              <span className="brand-title">ABHISHEK COACHING CLASSES</span>
+            </h1>
+          </div>
+          
+          <div className="terminal-window">
+            <div className="terminal-header">
+              <span className="terminal-button"></span>
+              <span className="terminal-button"></span>
+              <span className="terminal-button"></span>
+              <span className="terminal-title">student@acc:~$</span>
+            </div>
+            <div className="terminal-body">
+              <div className="line">
+                <span className="prompt">student@acc:~$</span>
+                <span className="command">initialize education.sys</span>
+              </div>
+              <div className="line">
+                <span className="response">Loading educational resources...</span>
+              </div>
+              <div className="line">
+                <span className="prompt">student@acc:~$</span>
+                <span className="command">display mission</span>
+              </div>
+              <div className="line">
+                <span className="response" ref={subtitleRef}></span>
+              </div>
+            </div>
+          </div>
+          
+          <div className="hero-buttons d-flex justify-content-center" ref={buttonsRef}>
+            <Link to="/admission" className="btn btn-primary mx-2">
+              <Zap size={18} />
+              <span>Apply Now</span>
+            </Link>
+            <Link to="/courses" className="btn btn-secondary mx-2">
+              <Code size={18} />
+              <span>View Courses</span>
+            </Link>
           </div>
         </div>
       </section>
 
       {/* Features Section */}
-      <section className="section" style={{ background: 'var(--color-bg)' }}>
+      <section className="section features-section">
         <div className="container">
-          <h2 className="section-title">Why Choose Us?</h2>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '2rem' }}>
-            <div className="course-card" style={{ textAlign: 'center', padding: '2rem', animation: 'slideInLeft 0.8s ease-out' }}>
-              <div className="floating">
-                <BookOpen size={48} style={{ color: 'var(--color-primary)', marginBottom: '1rem' }} />
+          <h2 className="section-title text-center">Why Choose Us</h2>
+          <div className="features-grid d-flex justify-content-center">
+            <div className="feature-card text-center mx-3">
+              <div className="feature-icon">
+                <BookOpen size={32} />
               </div>
               <h3>Expert Faculty</h3>
               <p>Experienced teachers dedicated to student success</p>
             </div>
-            <div className="course-card" style={{ textAlign: 'center', padding: '2rem', animation: 'slideInLeft 0.8s ease-out 0.1s both' }}>
-              <div className="floating">
-                <Users size={48} style={{ color: 'var(--color-primary)', marginBottom: '1rem' }} />
+            
+            <div className="feature-card text-center mx-3">
+              <div className="feature-icon">
+                <Users size={32} />
               </div>
               <h3>Small Batch Size</h3>
-              <p>Personalized attention for every student</p>
+              <p>Small batch sizes ensuring individual focus and guidance</p>
             </div>
-            <div className="course-card" style={{ textAlign: 'center', padding: '2rem', animation: 'slideInLeft 0.8s ease-out 0.2s both' }}>
-              <div className="floating">
-                <Calendar size={48} style={{ color: 'var(--color-primary)', marginBottom: '1rem' }} />
-              </div>
-              <h3>Flexible Timings</h3>
-              <p>Classes scheduled between 4 PM to 9 PM</p>
-            </div>
-            <div className="course-card" style={{ textAlign: 'center', padding: '2rem', animation: 'slideInLeft 0.8s ease-out 0.3s both' }}>
-              <div className="floating">
-                <Award size={48} style={{ color: 'var(--color-primary)', marginBottom: '1rem' }} />
+            
+            <div className="feature-card text-center mx-3">
+              <div className="feature-icon">
+                <Zap size={32} />
               </div>
               <h3>Proven Results</h3>
-              <p>Consistent track record of student achievements</p>
+              <p>Consistent track record of student success and achievements</p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Courses Preview */}
-      <section className="section">
+      {/* Courses Section */}
+      <section className="section courses-section">
         <div className="container">
           <h2 className="section-title">Our Courses</h2>
-          <div className="courses-grid">
-            <div className="course-card">
-              <h3>Lakshya 90</h3>
-              <p>CBSE Class 10 Special Batch</p>
-              <div className="course-fee">₹6,000</div>
-              <div className="course-timing">Timing: 4 PM – 9 PM</div>
-              <ul className="course-features">
-                <li>Complete CBSE syllabus coverage</li>
-                <li>Regular assessments</li>
-                <li>Doubt clearing sessions</li>
-                <li>One-time payment</li>
-              </ul>
+          <div className="courses-tiles d-flex justify-content-center">
+            <div className="course-tile">
+              <div className="course-tile-header">
+                <h3>Classes 1-5</h3>
+                <span className="course-badge">Foundation</span>
+              </div>
+              <div className="course-tile-content">
+                <p>Building strong fundamentals in Mathematics, Science, and English for primary school students.</p>
+                <Link to="/courses" className="btn btn-sm btn-outline">Learn More</Link>
+              </div>
             </div>
             
-            <div className="course-card">
-              <h3>Sankalp</h3>
-              <p>Navodaya Vidyalaya Preparation</p>
-              <div className="course-fee">₹8,000 - ₹15,000</div>
-              <div className="course-timing">Timing: 4 PM – 9 PM</div>
-              <ul className="course-features">
-                <li>Class 3 Entry: ₹15,000 (3 years)</li>
-                <li>Class 4 Entry: ₹13,000 (2 years)</li>
-                <li>Class 5 Entry: ₹8,000 (1 year)</li>
-                <li>Specialized preparation</li>
-              </ul>
+            <div className="course-tile">
+              <div className="course-tile-header">
+                <h3>Classes 6-10</h3>
+                <span className="course-badge">Comprehensive</span>
+              </div>
+              <div className="course-tile-content">
+                <p>Complete academic support for middle and high school students with focus on board exam preparation.</p>
+                <Link to="/courses" className="btn btn-sm btn-outline">Learn More</Link>
+              </div>
             </div>
             
-            <div className="course-card">
-              <h3>MIT30</h3>
-              <p>Spoken English Mastery</p>
-              <div className="course-fee">₹1,499</div>
-              <div className="course-timing">Timing: 4 PM – 9 PM</div>
-              <ul className="course-features">
-                <li>3 months intensive course</li>
-                <li>Practical speaking sessions</li>
-                <li>Grammar fundamentals</li>
-                <li>One-time payment</li>
-              </ul>
+            <div className="course-tile">
+              <div className="course-tile-header">
+                <h3>Navodaya Preparation</h3>
+                <span className="course-badge">Special</span>
+              </div>
+              <div className="course-tile-content">
+                <p>Specialized coaching for Jawahar Navodaya Vidyalaya entrance examination with proven success rate.</p>
+                <Link to="/courses" className="btn btn-sm btn-outline">Learn More</Link>
+              </div>
             </div>
             
-            <div className="course-card">
-              <h3>MIB 1.0</h3>
-              <p>Biology NCERT Mastery</p>
-              <div className="course-fee">₹499/month or ₹4,000</div>
-              <div className="course-timing">Timing: 4 PM – 9 PM</div>
-              <ul className="course-features">
-                <li>Class 11 & 12 Biology</li>
-                <li>Complete NCERT coverage</li>
-                <li>Monthly or one-time payment</li>
-                <li>Conceptual clarity</li>
-              </ul>
-            </div>
-
-            <div className="course-card">
-              <h3>Doubt Solving</h3>
-              <p>Dedicated weekly doubt-solving sessions</p>
-              <div className="course-fee">₹499/month</div>
-              <div className="course-timing">Timing: 4 PM – 9 PM</div>
-              <ul className="course-features">
-                <li>Weekly doubt sessions</li>
-                <li>Personalized guidance</li>
-                <li>Concept revision</li>
-                <li>Affordable monthly plan</li>
-              </ul>
+            <div className="course-tile">
+              <div className="course-tile-header">
+                <h3>CHS Preparation</h3>
+                <span className="course-badge">New Batch</span>
+              </div>
+              <div className="course-tile-content">
+                <p>Targeted preparation for Central Hindu School entrance test with comprehensive study material and mock tests.</p>
+                <Link to="/courses" className="btn btn-sm btn-outline">Learn More</Link>
+              </div>
             </div>
           </div>
-          <div style={{ textAlign: 'center', marginTop: '2rem' }}>
-            <Link to="/courses" className="btn">View All Courses</Link>
+          <div className="mt-4 text-center">
+            <Link to="/courses" className="btn btn-primary">View All Courses</Link>
           </div>
         </div>
       </section>
 
-      {/* Mock Test Section */}
-      <section className="section" style={{ background: 'linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-800) 100%)', color: 'white' }}>
+      {/* Events Section */}
+      <section className="section events-section">
         <div className="container">
-          <h2 className="section-title" style={{ color: 'white' }}>Mock Test Program</h2>
-          <div style={{ textAlign: 'center', maxWidth: '600px', margin: '0 auto' }}>
-            <p style={{ fontSize: '1.2rem', marginBottom: '2rem' }}>
-              Enhance your preparation with our monthly mock tests. Practice makes perfect!
-            </p>
-            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
-              <div style={{ background: 'rgba(255,255,255,0.2)', padding: '1rem', borderRadius: '10px' }}>
-                <strong>Fee: ₹300/month</strong>
+          <h2 className="section-title">Upcoming Events</h2>
+          <div className="events-tiles d-flex justify-content-center">
+            <div className="event-tile">
+              <div className="event-tile-header">
+                <h3>Science Exhibition</h3>
+                <span className="event-badge">Free</span>
               </div>
-              <div style={{ background: 'rgba(255,255,255,0.2)', padding: '1rem', borderRadius: '10px' }}>
-                <strong>Mode: Offline at Coaching</strong>
+              <div className="event-tile-content">
+                <p className="event-date">December 15, 2024</p>
+                <p>Annual science exhibition showcasing student projects and innovations in various scientific domains.</p>
+                <p className="event-location">Abhishek Coaching Classes</p>
+                <Link to="/events" className="btn btn-sm btn-outline">Details</Link>
+              </div>
+            </div>
+            
+            <div className="event-tile">
+              <div className="event-tile-header">
+                <h3>Mock Test Series Launch</h3>
+                <span className="event-badge">₹300</span>
+              </div>
+              <div className="event-tile-content">
+                <p className="event-date">December 25, 2024</p>
+                <p>Introduction to our comprehensive mock test series for board exam preparation.</p>
+                <p className="event-location">Abhishek Coaching Classes</p>
+                <Link to="/events" className="btn btn-sm btn-outline">Register</Link>
+              </div>
+            </div>
+            
+            <div className="event-tile">
+              <div className="event-tile-header">
+                <h3>Parent-Teacher Meeting</h3>
+                <span className="event-badge">Important</span>
+              </div>
+              <div className="event-tile-content">
+                <p className="event-date">January 10, 2025</p>
+                <p>Quarterly meeting to discuss student progress and address parent concerns.</p>
+                <p className="event-location">Abhishek Coaching Classes</p>
+                <Link to="/events" className="btn btn-sm btn-outline">Details</Link>
               </div>
             </div>
           </div>
+          <div className="mt-4 text-center">
+            <Link to="/events" className="btn btn-primary">View All Events</Link>
+          </div>
         </div>
       </section>
+
 
       {/* CTA Section */}
-      <section className="section" style={{ background: 'var(--color-bg)' }}>
+      <section className="section cta-section">
         <div className="container">
-          <div style={{ textAlign: 'center' }}>
-            <h2 className="section-title">Ready to Start Your Journey?</h2>
-            <p style={{ fontSize: '1.2rem', marginBottom: '2rem', maxWidth: '600px', margin: '0 auto 2rem' }}>
-              Join hundreds of successful students who have achieved their goals with our guidance.
-            </p>
-            <Link to="/admission" className="btn" style={{ fontSize: '1.1rem', padding: '15px 40px' }}>
-              Apply for Admission
-            </Link>
+          <div className="cta-content text-center">
+            <h2 className="cta-title">Ready to Start Your Success Journey?</h2>
+            <p className="cta-text">Join Abhishek Coaching Classes and unlock your full potential with our expert guidance.</p>
+            <div className="cta-buttons d-flex justify-content-center">
+              <Link to="/admission" className="btn btn-primary mx-2">Apply Now</Link>
+              <Link to="/contact" className="btn btn-outline mx-2">Contact Us</Link>
+            </div>
           </div>
         </div>
       </section>

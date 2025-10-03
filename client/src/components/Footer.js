@@ -1,58 +1,88 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Mail, Phone, MapPin } from 'lucide-react';
+import { Mail, Phone, MapPin, Terminal, Lock, ChevronRight, Github, Linkedin, Facebook, Instagram } from 'lucide-react';
 import logo from '../assets/logo.jpg';
 
 const Footer = () => {
   return (
     <footer className="footer">
+      <div className="footer-scanline"></div>
       <div className="container">
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '2rem', marginBottom: '2rem', alignItems: 'center' }}>
-          <div>
-            <div style={{ display: 'flex', alignItems: 'center', marginBottom: '1rem' }}>
-              <img src={logo} alt="Abhishek Coaching Classes" style={{ height: 50, width: 50, borderRadius: '50%', marginRight: 10, objectFit: 'cover' }} />
-              <h3 style={{ color: '#ff8c00', margin: 0 }}>Abhishek Coaching Classes</h3>
+        <div className="footer-grid">
+          <div className="footer-about">
+            <div className="footer-logo">
+              <img 
+                src={logo} 
+                alt="Abhishek Coaching Classes" 
+                className="footer-logo-img site-logo" 
+              />
+              <div className="footer-logo-text">
+                <Terminal size={14} className="footer-logo-icon" />
+                <h3>Abhishek Coaching Classes</h3>
+              </div>
             </div>
-            <p style={{ marginBottom: '1rem', maxWidth: 400 }}>
-              Quality education with personalized guidance. Join our batches to boost your performance and confidence.
+            <p className="footer-description">
+              Quality education with personalized guidance. 
+              Join our batches to boost your performance and confidence.
             </p>
-            <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-              <a href="/admission" className="btn" style={{ padding: '8px 16px' }}>Apply Now</a>
-              <a href="/courses" className="btn btn-secondary" style={{ padding: '8px 16px' }}>View Courses</a>
+            <div className="footer-buttons">
+              <Link to="/admission" className="btn btn-sm btn-primary">
+                <span>Apply Now</span>
+                <ChevronRight size={16} />
+              </Link>
+              <Link to="/courses" className="btn btn-sm btn-light">
+                <span>View Courses</span>
+                <ChevronRight size={16} />
+              </Link>
             </div>
           </div>
 
-          <div>
-            <h4 style={{ marginBottom: '1rem', color: '#ffd700' }}>Quick Links</h4>
-            <ul style={{ listStyle: 'none' }}>
-              <li style={{ marginBottom: '0.5rem' }}><Link to="/courses" style={{ color: 'white', textDecoration: 'none' }}>Courses</Link></li>
-              <li style={{ marginBottom: '0.5rem' }}><Link to="/admission" style={{ color: 'white', textDecoration: 'none' }}>Admission</Link></li>
-              <li style={{ marginBottom: '0.5rem' }}><Link to="/events" style={{ color: 'white', textDecoration: 'none' }}>Events</Link></li>
-              <li style={{ marginBottom: '0.5rem' }}><Link to="/resources" style={{ color: 'white', textDecoration: 'none' }}>Resources</Link></li>
-              <li style={{ marginBottom: '0.5rem' }}><Link to="/faculty" style={{ color: 'white', textDecoration: 'none' }}>Faculty</Link></li>
-              <li style={{ marginBottom: '0.5rem' }}><Link to="/contact" style={{ color: 'white', textDecoration: 'none' }}>Contact</Link></li>
+          <div className="footer-links-container">
+            <h4 className="footer-heading">Quick Links</h4>
+            <ul className="footer-links">
+              <li><Link to="/" className="footer-link"><ChevronRight size={14} />Home</Link></li>
+              <li><Link to="/courses" className="footer-link"><ChevronRight size={14} />Courses</Link></li>
+              <li><Link to="/admission" className="footer-link"><ChevronRight size={14} />Admission</Link></li>
+              <li><Link to="/events" className="footer-link"><ChevronRight size={14} />Events</Link></li>
+              <li><Link to="/resources" className="footer-link"><ChevronRight size={14} />Resources</Link></li>
+              <li><Link to="/faculty" className="footer-link"><ChevronRight size={14} />Faculty</Link></li>
+              <li><Link to="/contact" className="footer-link"><ChevronRight size={14} />Contact</Link></li>
             </ul>
           </div>
 
-          <div>
-            <h4 style={{ marginBottom: '1rem', color: '#ffd700' }}>Contact Info</h4>
-            <div style={{ display: 'flex', alignItems: 'center', marginBottom: '0.5rem' }}>
-              <Phone size={16} style={{ marginRight: '0.5rem' }} />
+          <div className="footer-contact">
+            <h4 className="footer-heading">Contact Info</h4>
+            <div className="footer-contact-item">
+              <Phone size={16} className="footer-contact-icon" />
               <span>+91 8957536528</span>
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', marginBottom: '0.5rem' }}>
-              <Mail size={16} style={{ marginRight: '0.5rem' }} />
+            <div className="footer-contact-item">
+              <Mail size={16} className="footer-contact-icon" />
               <span>acclilasi@zohomail.in</span>
             </div>
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-              <MapPin size={16} style={{ marginRight: '0.5rem' }} />
+            <div className="footer-contact-item">
+              <MapPin size={16} className="footer-contact-icon" />
               <span>lilasi kala, Sonbhadra, Uttar Pradesh 231212</span>
             </div>
+            <div className="footer-social">
+              <a href="#" className="social-icon"><Facebook size={18} /></a>
+              <a href="#" className="social-icon"><Instagram size={18} /></a>
+              <a href="#" className="social-icon"><Linkedin size={18} /></a>
+              <a href="#" className="social-icon"><Github size={18} /></a>
+            </div>
+          </div>
+          
+          <div className="footer-admin">
+            <h4 className="footer-heading">Admin Access</h4>
+            <Link to="/admin/login" className="btn btn-sm btn-light">
+              <Lock size={16} />
+              <span>Admin Login</span>
+            </Link>
           </div>
         </div>
 
-        <div style={{ borderTop: '1px solid #555', paddingTop: '1rem', textAlign: 'center' }}>
-          <p>&copy; 2024 <span style={{ color: '#ff8c00' }}>Abhishek Coaching Classes</span>. All rights reserved.</p>
+        <div className="footer-bottom">
+          <p>&copy; 2024 <span className="highlight">Abhishek Coaching Classes</span>. All rights reserved.</p>
         </div>
       </div>
     </footer>

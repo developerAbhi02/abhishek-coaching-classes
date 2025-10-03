@@ -96,9 +96,9 @@ const Events = () => {
               <p style={{ color: '#999' }}>Check back later for upcoming events and workshops.</p>
             </div>
           ) : (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '2rem' }}>
+            <div className="events-tiles">
               {events.map((event) => (
-                <div key={event._id} className="course-card">
+                <div key={event._id} className="event-tile">
                   <div style={{ display: 'flex', alignItems: 'center', marginBottom: '1rem' }}>
                     <Calendar size={24} style={{ color: 'var(--color-primary)', marginRight: '0.5rem' }} />
                     <h3>{event.title}</h3>
