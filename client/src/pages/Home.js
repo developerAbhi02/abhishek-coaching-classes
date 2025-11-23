@@ -1,10 +1,9 @@
 import React, { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { BookOpen, Users, Calendar, FileText, Award, Terminal, Code, Shield, Zap } from 'lucide-react';
+import { BookOpen, Users, Code, Zap } from 'lucide-react';
 import Typed from 'typed.js';
 
 const Home = () => {
-  const titleRef = useRef(null);
   const subtitleRef = useRef(null);
   const buttonsRef = useRef(null);
 

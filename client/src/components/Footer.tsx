@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Mail, Phone, MapPin, Terminal, Lock, ChevronRight, Github, Linkedin, Facebook, Instagram } from 'lucide-react';
+import { Mail, Phone, MapPin, Terminal, ChevronRight, Github, Linkedin, Facebook, Instagram } from 'lucide-react';
 import logo from '../assets/logo.jpg';
 
 const Footer = () => {
@@ -65,10 +65,10 @@ const Footer = () => {
               <span>lilasi kala, Sonbhadra, Uttar Pradesh 231212</span>
             </div>
             <div className="footer-social">
-              <a href="#" className="social-icon"><Facebook size={18} /></a>
-              <a href="#" className="social-icon"><Instagram size={18} /></a>
-              <a href="#" className="social-icon"><Linkedin size={18} /></a>
-              <a href="#" className="social-icon"><Github size={18} /></a>
+              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="social-icon"><Facebook size={18} /></a>
+              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="social-icon"><Instagram size={18} /></a>
+              <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="social-icon"><Linkedin size={18} /></a>
+              <a href="https://github.com" target="_blank" rel="noopener noreferrer" aria-label="GitHub" className="social-icon"><Github size={18} /></a>
             </div>
           </div>
           
