@@ -12,6 +12,5 @@
   "rewrites": [{
     "source": "/(.*)",
     "destination": "/index.html"
-  }],
-  "ignoreCommand": "echo Skipping unused server directory"
+  }]
 }
