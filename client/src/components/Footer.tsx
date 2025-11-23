@@ -72,13 +72,7 @@ const Footer = () => {
             </div>
           </div>
           
-          <div className="footer-admin">
-            <h4 className="footer-heading">Admin Access</h4>
-            <Link to="/admin/login" className="btn btn-sm btn-light">
-              <Lock size={16} />
-              <span>Admin Login</span>
-            </Link>
-          </div>
+
         </div>
 
         <div className="footer-bottom">

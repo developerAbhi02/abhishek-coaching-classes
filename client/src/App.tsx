@@ -9,8 +9,7 @@ import Events from './pages/Events';
 import Resources from './pages/Resources';
 import Contact from './pages/Contact';
 import Faculty from './pages/Faculty';
-import AdminLogin from './pages/AdminLogin';
-import AdminDashboard from './pages/AdminDashboard';
+
 import Chatbot from './components/Chatbot';
 
 function App() {
@@ -26,8 +25,6 @@ function App() {
           <Route path="/resources" element={<Resources />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/faculty" element={<Faculty />} />
-          <Route path="/admin/login" element={<AdminLogin />} />
-          <Route path="/admin/dashboard" element={<AdminDashboard />} />
         </Routes>
       </main>
       <Footer />

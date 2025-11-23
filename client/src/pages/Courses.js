@@ -1,74 +1,55 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Clock, Users, BookOpen, CheckCircle } from 'lucide-react';
-import axios from 'axios';
+
+const courses = [
+  {
+    _id: '1',
+    name: 'Lakshya 90',
+    description: 'CBSE Class 10 Special Batch - Complete syllabus coverage with regular assessments',
+    fee: 6000,
+    duration: '1 Year',
+    timing: '4 PM – 9 PM',
+    features: ['Complete CBSE syllabus coverage', 'Regular assessments', 'Doubt clearing sessions', 'One-time payment']
+  },
+  {
+    _id: '2',
+    name: 'Sankalp',
+    description: 'Navodaya Vidyalaya Preparation - Specialized coaching for entrance exams',
+    fee: 15000,
+    duration: '1-3 Years',
+    timing: '4 PM – 9 PM',
+    features: ['Class 3 Entry: ₹15,000 (3 years)', 'Class 4 Entry: ₹13,000 (2 years)', 'Class 5 Entry: ₹8,000 (1 year)', 'Specialized preparation']
+  },
+  {
+    _id: '3',
+    name: 'MIT30',
+    description: 'Spoken English Mastery - Intensive 3-month course for English fluency',
+    fee: 1499,
+    duration: '3 Months',
+    timing: '4 PM – 9 PM',
+    features: ['3 months intensive course', 'Practical speaking sessions', 'Grammar fundamentals', 'One-time payment']
+  },
+  {
+    _id: '4',
+    name: 'MIB 1.0',
+    description: 'Biology NCERT Mastery - Complete coverage of Class 11 & 12 Biology',
+    fee: 4000,
+    duration: 'Flexible',
+    timing: '4 PM – 9 PM',
+    features: ['Class 11 & 12 Biology', 'Complete NCERT coverage', 'Monthly or one-time payment', 'Conceptual clarity']
+  },
+  {
+    _id: '5',
+    name: 'Doubt Solving',
+    description: 'Dedicated doubt-solving sessions every week to strengthen concepts and boost confidence',
+    fee: 499,
+    duration: 'Monthly',
+    timing: '4 PM – 9 PM',
+    features: ['Weekly doubt sessions', 'Personalized guidance', 'Concept revision', '₹499 per month']
+  }
+];
 
 const Courses = () => {
-  const [courses, setCourses] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetchCourses();
-  }, []);
-
-  const fetchCourses = async () => {
-    try {
-      const response = await axios.get('/api/courses');
-      setCourses(response.data);
-    } catch (error) {
-      console.error('Error fetching courses:', error);
-      // Fallback to static data if API fails
-      setCourses([
-        {
-          _id: '1',
-          name: 'Lakshya 90',
-          description: 'CBSE Class 10 Special Batch - Complete syllabus coverage with regular assessments',
-          fee: 6000,
-          duration: '1 Year',
-          timing: '4 PM – 9 PM',
-          features: ['Complete CBSE syllabus coverage', 'Regular assessments', 'Doubt clearing sessions', 'One-time payment']
-        },
-        {
-          _id: '2',
-          name: 'Sankalp',
-          description: 'Navodaya Vidyalaya Preparation - Specialized coaching for entrance exams',
-          fee: 15000,
-          duration: '1-3 Years',
-          timing: '4 PM – 9 PM',
-          features: ['Class 3 Entry: ₹15,000 (3 years)', 'Class 4 Entry: ₹13,000 (2 years)', 'Class 5 Entry: ₹8,000 (1 year)', 'Specialized preparation']
-        },
-        {
-          _id: '3',
-          name: 'MIT30',
-          description: 'Spoken English Mastery - Intensive 3-month course for English fluency',
-          fee: 1499,
-          duration: '3 Months',
-          timing: '4 PM – 9 PM',
-          features: ['3 months intensive course', 'Practical speaking sessions', 'Grammar fundamentals', 'One-time payment']
-        },
-        {
-          _id: '4',
-          name: 'MIB 1.0',
-          description: 'Biology NCERT Mastery - Complete coverage of Class 11 & 12 Biology',
-          fee: 4000,
-          duration: 'Flexible',
-          timing: '4 PM – 9 PM',
-          features: ['Class 11 & 12 Biology', 'Complete NCERT coverage', 'Monthly or one-time payment', 'Conceptual clarity']
-        },
-        {
-          _id: '5',
-          name: 'Doubt Solving',
-          description: 'Dedicated doubt-solving sessions every week to strengthen concepts and boost confidence',
-          fee: 499,
-          duration: 'Monthly',
-          timing: '4 PM – 9 PM',
-          features: ['Weekly doubt sessions', 'Personalized guidance', 'Concept revision', '₹499 per month']
-        }
-      ]);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const formatFee = (course) => {
     if (course.name === 'Sankalp') {
       return '₹8,000 - ₹15,000';
@@ -80,17 +61,6 @@ const Courses = () => {
     return `₹${course.fee.toLocaleString()}`;
   };
 
-  if (loading) {
-    return (
-      <div className="section">
-        <div className="container">
-          <div className="loading">
-            <div className="spinner"></div>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div>

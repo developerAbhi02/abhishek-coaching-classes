@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { User, Phone, MapPin, BookOpen, CheckCircle, Download } from 'lucide-react';
-import axios from 'axios';
 import toast from 'react-hot-toast';
 import admissionFormPdf from '../assets/ADMACC.pdf';
 
@@ -12,12 +11,13 @@ const Admission = () => {
   const onSubmit = async (data) => {
     setIsSubmitting(true);
     try {
-      const response = await axios.post('/api/admissions', data);
-      toast.success('Admission enquiry submitted successfully! We will contact you within 24-48 hours.');
+      // Send to external form provider (Zoho/Google) or prompt user to use the official form link
+      // Here we simply show success and instruct the user.
+      toast.success('Submitted locally. Please complete the official Zoho/Google form for processing.');
       reset();
     } catch (error) {
       console.error('Admission submission error:', error);
-      toast.error('Failed to submit admission enquiry. Please try again.');
+      toast.error('Failed to submit enquiry locally. Please try again.');
     } finally {
       setIsSubmitting(false);
     }

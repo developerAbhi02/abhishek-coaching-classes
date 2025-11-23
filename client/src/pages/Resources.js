@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FileText, Download, Calendar, Filter, Eye } from 'lucide-react';
-import api from '../api';
+import { FileText, Calendar, Filter, Eye } from 'lucide-react';
 
 const Resources = () => {
   const [resources, setResources] = useState([]);
@@ -24,63 +23,58 @@ const Resources = () => {
     filterResources();
   }, [resources, selectedCategory]);
 
-  const fetchResources = async () => {
-    try {
-      const response = await api.get('/api/resources');
-      setResources(response.data);
-    } catch (error) {
-      console.error('Error fetching resources:', error);
-      // Fallback to static data if API fails
-      setResources([
-        {
-          _id: '1',
-          title: 'CBSE Class 10 Mathematics Notes',
-          description: 'Comprehensive notes covering all chapters of CBSE Class 10 Mathematics syllabus',
-          fileType: 'pdf',
-          category: 'notes',
-          fileUrl: '#',
-          createdAt: new Date('2024-11-01')
-        },
-        {
-          _id: '2',
-          title: 'Sample Paper - Mathematics Class 10',
-          description: 'Latest CBSE sample paper for Mathematics Class 10 with marking scheme',
-          fileType: 'pdf',
-          category: 'sample-papers',
-          fileUrl: '#',
-          createdAt: new Date('2024-11-05')
-        },
-        {
-          _id: '3',
-          title: 'Navodaya Vidyalaya Syllabus',
-          description: 'Complete syllabus for Navodaya Vidyalaya entrance examination',
-          fileType: 'pdf',
-          category: 'syllabus',
-          fileUrl: '#',
-          createdAt: new Date('2024-11-10')
-        },
-        {
-          _id: '4',
-          title: 'Important Announcement - Mock Tests',
-          description: 'Schedule and guidelines for upcoming mock test series',
-          fileType: 'pdf',
-          category: 'announcements',
-          fileUrl: '#',
-          createdAt: new Date('2024-11-15')
-        },
-        {
-          _id: '5',
-          title: 'Biology NCERT Solutions',
-          description: 'Detailed solutions for NCERT Biology textbook questions',
-          fileType: 'pdf',
-          category: 'notes',
-          fileUrl: '#',
-          createdAt: new Date('2024-11-20')
-        }
-      ]);
-    } finally {
-      setLoading(false);
+  // Static resources content for the pure static site
+  const STATIC_RESOURCES = [
+    {
+      _id: '1',
+      title: 'CBSE Class 10 Mathematics Notes',
+      description: 'Comprehensive notes covering all chapters of CBSE Class 10 Mathematics syllabus',
+      fileType: 'pdf',
+      category: 'notes',
+      fileUrl: '#',
+      createdAt: new Date('2024-11-01')
+    },
+    {
+      _id: '2',
+      title: 'Sample Paper - Mathematics Class 10',
+      description: 'Latest CBSE sample paper for Mathematics Class 10 with marking scheme',
+      fileType: 'pdf',
+      category: 'sample-papers',
+      fileUrl: '#',
+      createdAt: new Date('2024-11-05')
+    },
+    {
+      _id: '3',
+      title: 'Navodaya Vidyalaya Syllabus',
+      description: 'Complete syllabus for Navodaya Vidyalaya entrance examination',
+      fileType: 'pdf',
+      category: 'syllabus',
+      fileUrl: '#',
+      createdAt: new Date('2024-11-10')
+    },
+    {
+      _id: '4',
+      title: 'Important Announcement - Mock Tests',
+      description: 'Schedule and guidelines for upcoming mock test series',
+      fileType: 'pdf',
+      category: 'announcements',
+      fileUrl: '#',
+      createdAt: new Date('2024-11-15')
+    },
+    {
+      _id: '5',
+      title: 'Biology NCERT Solutions',
+      description: 'Detailed solutions for NCERT Biology textbook questions',
+      fileType: 'pdf',
+      category: 'notes',
+      fileUrl: '#',
+      createdAt: new Date('2024-11-20')
     }
+  ];
+
+  const fetchResources = async () => {
+    setResources(STATIC_RESOURCES);
+    setLoading(false);
   };
 
   const filterResources = () => {

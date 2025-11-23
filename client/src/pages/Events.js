@@ -1,53 +1,34 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Calendar, MapPin, Clock, Users } from 'lucide-react';
-import axios from 'axios';
+
+const events = [
+  {
+    _id: '1',
+    title: 'Winter Olympiad 2024',
+    description: 'Join our annual Winter Olympiad competition for students of all classes. Test your knowledge and win exciting prizes!',
+    date: new Date('2024-12-15'),
+    location: 'Abhishek Coaching Classes',
+    fee: 200
+  },
+  {
+    _id: '2',
+    title: 'Parent-Teacher Meeting',
+    description: 'Monthly parent-teacher meeting to discuss student progress and address any concerns.',
+    date: new Date('2024-12-20'),
+    location: 'Abhishek Coaching Classes',
+    fee: 0
+  },
+  {
+    _id: '3',
+    title: 'Mock Test Series Launch',
+    description: 'Introduction to our comprehensive mock test series for board exam preparation.',
+    date: new Date('2024-12-25'),
+    location: 'Abhishek Coaching Classes',
+    fee: 300
+  }
+];
 
 const Events = () => {
-  const [events, setEvents] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetchEvents();
-  }, []);
-
-  const fetchEvents = async () => {
-    try {
-      const response = await axios.get('/api/events');
-      setEvents(response.data);
-    } catch (error) {
-      console.error('Error fetching events:', error);
-      // Fallback to static data if API fails
-      setEvents([
-        {
-          _id: '1',
-          title: 'Winter Olympiad 2024',
-          description: 'Join our annual Winter Olympiad competition for students of all classes. Test your knowledge and win exciting prizes!',
-          date: new Date('2024-12-15'),
-          location: 'Abhishek Coaching Classes',
-          fee: 200
-        },
-        {
-          _id: '2',
-          title: 'Parent-Teacher Meeting',
-          description: 'Monthly parent-teacher meeting to discuss student progress and address any concerns.',
-          date: new Date('2024-12-20'),
-          location: 'Abhishek Coaching Classes',
-          fee: 0
-        },
-        {
-          _id: '3',
-          title: 'Mock Test Series Launch',
-          description: 'Introduction to our comprehensive mock test series for board exam preparation.',
-          date: new Date('2024-12-25'),
-          location: 'Abhishek Coaching Classes',
-          fee: 300
-        }
-      ]);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const formatDate = (date) => {
     return new Date(date).toLocaleDateString('en-IN', {
       weekday: 'long',
@@ -64,17 +45,6 @@ const Events = () => {
     });
   };
 
-  if (loading) {
-    return (
-      <div className="section">
-        <div className="container">
-          <div className="loading">
-            <div className="spinner"></div>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div>
